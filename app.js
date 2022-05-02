@@ -19,7 +19,9 @@ var MongoDBStore = require('connect-mongodb-session')(session);
 // *********************************************************** //
 //  Loading models
 // *********************************************************** //
-// MODELS HERE
+const User = require('./models/User')
+const WatchListItem = require('./models/ToDoItem').watchListItem
+const BucketListItem = require('./models/ToDoItem').bucketListItem
 
 // *********************************************************** //
 //  Connecting to the database 
@@ -37,9 +39,6 @@ mongoose.set('useCreateIndex', true);
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {console.log("we are connected!!!")});
-
-
-
 
 
 // *********************************************************** //
@@ -124,6 +123,24 @@ app.get("/", (req, res, next) => {
   res.render("blank");
 });
 
+app.get("/testing", (req, res, next) => {
+  res.render("blank");
+});
+
+app.get("/watchlist", isLoggedIn, async (req, res, next) => {
+  res.locals.watch_list =  await WatchListItem.find({})
+  res.render("watchlist");
+});
+
+app.get("/watchlist/add", isLoggedIn, (req, res, next) => {
+  res.render("watchlistForm");
+});
+
+app.post("/watchlist/add", isLoggedIn, (req, res, next) => {
+  console.log("WOW")
+});
+
+
 // here we catch 404 errors and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
@@ -153,6 +170,7 @@ app.set("port", port);
 // and now we startup the server listening on that port
 const http = require("http");
 const { reset } = require("nodemon");
+const { rmSync } = require("fs");
 const server = http.createServer(app);
 
 server.listen(port);

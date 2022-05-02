@@ -45,6 +45,9 @@ router.use((req,res,next) => {
 
 
 router.get("/login", (req,res) => {
+  if (req.query.incorrectLogin == 'true'){
+    res.locals.incorrectLogin = true
+  }
   res.render("login")
 })
 
@@ -53,7 +56,10 @@ router.post('/login',
     try {
       const {username,passphrase} = req.body
       const user = await User.findOne({username:username})
-      const isMatch = await bcrypt.compare(passphrase,user.passphrase );
+      let isMatch = false;
+      if (user !== null){
+        isMatch = await bcrypt.compare(passphrase,user.passphrase );
+      }
 
       if (isMatch) {
         req.session.username = username //req.body
@@ -62,7 +68,7 @@ router.post('/login',
       } else {
         req.session.username = null
         req.session.user = null
-        res.redirect('/login')
+        res.redirect('login' + '/?incorrectLogin=' + true)
       }
     }catch(e){
       next(e)
@@ -72,9 +78,9 @@ router.post('/login',
 router.post('/signup',
   async (req,res,next) =>{
     try {
-      const {username,passphrase,passphrase2,age} = req.body
+      const {username,passphrase,passphrase2} = req.body
       if (passphrase != passphrase2){
-        res.redirect('/login')
+        res.send("passwords do not match")
       }else {
         const encrypted = await bcrypt.hash(passphrase, saltRounds);
 
@@ -89,7 +95,6 @@ router.post('/signup',
           const user = new User(
             {username:username,
              passphrase:encrypted,
-             age:age
             })
           
           await user.save()

@@ -1,0 +1,22 @@
+
+<a href="/watchlist/add" type="button" class="btn btn-outline-primary">Add to watch list</a>
+
+<div>
+    <% if (watch_list == "") {%>
+        <h1 >Empty watch list :(</h1>
+    <% } else { %>
+        <div class="d-flex overflow-scroll flex-column">
+            <h1>Watch List</h1>
+            <% for (elem of watch_list){%>
+                <div class="p-3 m-3 border border-primary bg-light">
+                    <div>
+                        <h2><u>Title:</u>&emsp;<%= elem.title %> </h2>
+                        <h4><u>Description:</u>&emsp;<%= elem.description %></h4>
+                        <h4><u>Created At:</u>&emsp;<%= elem.createdAt %></h4>                
+                        <h4><u>Priority:</u>&emsp;<%= elem.priority %></h4>                
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    <% } %>
+</div>
