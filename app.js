@@ -15,7 +15,6 @@ const debug = require("debug")("personalapp:server");
 const layouts = require("express-ejs-layouts");
 var MongoDBStore = require('connect-mongodb-session')(session);
 
-
 // *********************************************************** //
 //  Loading models
 // *********************************************************** //
@@ -136,8 +135,40 @@ app.get("/watchlist/add", isLoggedIn, (req, res, next) => {
   res.render("watchlistForm");
 });
 
-app.post("/watchlist/add", isLoggedIn, (req, res, next) => {
-  console.log("WOW")
+app.post("/watchlist/add", isLoggedIn, async (req, res, next) => {
+  const {titleInput, descriptionArea, prioritySelect} = req.body
+  const item = new WatchListItem({
+    userId: req.session.user._id,
+    title: titleInput,
+    description: descriptionArea,
+    priority: prioritySelect,
+    completed: false,
+    createdAt: new Date(),
+    addedBy: req.session.user.username,
+  })
+  await item.save()
+  res.redirect("/watchlist")
+});
+
+app.get("/watchlist/delete/:itemId", isLoggedIn, async (req, res, next) => {
+  try{
+    const itemId=req.params.itemId; 
+    await WatchListItem.deleteOne({_id:itemId}) 
+    res.redirect('/watchlist')
+  } catch (e){
+    next(e);
+  }
+});
+
+app.get("/watchlist/setCompleted/:itemId/:bool", isLoggedIn, async (req, res, next) => {
+  try{
+    const itemId=req.params.itemId;
+    const completed = req.params.bool=='true';
+    await WatchListItem.findByIdAndUpdate(itemId,{completed})
+    res.redirect('/watchlist')
+  } catch (e){
+    next(e);
+  }
 });
 
 

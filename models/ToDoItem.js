@@ -10,6 +10,7 @@ var toDoItemSchema = Schema( {
   priority: Number,
   completed: Boolean,
   createdAt: Date,
+  addedBy: String,
 } );
 
 const watchListItem = mongoose.model( 'WatchListItem', toDoItemSchema );

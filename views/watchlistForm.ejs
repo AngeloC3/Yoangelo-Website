@@ -1,17 +1,17 @@
 <form class="form-control-lg" method="post" action="/watchlist/add">
     <div class="form-group">
       <label for="titleInput">Title</label>
-      <input type="text" class="form-control" id="titleInput" placeholder="">
+      <input type="text" class="form-control" id="titleInput" name="titleInput" placeholder="">
     </div>
     <br>
     <div class="form-group">
         <label for="descriptionArea">Description</label>
-        <textarea class="form-control" id="descriptionArea" rows="2"></textarea>
+        <textarea class="form-control" id="descriptionArea" name="descriptionArea" rows="2"></textarea>
       </div>
     <br>
     <div class="form-group">
       <label for="prioritySelect">Priority</label>
-      <select class="form-control" id="prioritySelect">
+      <select class="form-control" id="prioritySelect" name="prioritySelect">
         <% for(let i=1; i<=10; i++) {%>
             <% if (i == 5) {%>
                 <option selected><%= i %></option>

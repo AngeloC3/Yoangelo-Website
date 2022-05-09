@@ -9,11 +9,26 @@
             <h1>Watch List</h1>
             <% for (elem of watch_list){%>
                 <div class="p-3 m-3 border border-primary bg-light">
-                    <div>
-                        <h2><u>Title:</u>&emsp;<%= elem.title %> </h2>
-                        <h4><u>Description:</u>&emsp;<%= elem.description %></h4>
-                        <h4><u>Created At:</u>&emsp;<%= elem.createdAt %></h4>                
-                        <h4><u>Priority:</u>&emsp;<%= elem.priority %></h4>                
+                    <% if (elem.completed === false) {%>
+                        <div>
+                    <% } else { %>
+                        <div class ="bg-secondary">
+                    <% } %>
+                        <div class="m-1 p-1">
+                            <h2><u>Title:</u>&emsp;<%= elem.title %> </h2>
+                            <h4><u>Description:</u>&emsp;<%= elem.description %></h4>
+                            <h4><u>Priority:</u>&emsp;<%= elem.priority %></h4> 
+                            <h4><u>Created At:</u>&emsp;<%= elem.createdAt.toLocaleDateString("en-US", { weekday: undefined, year: 'numeric', month: 'long', day: 'numeric' }) %></h4>                
+                            <h4><u>Added by:</u>&emsp;<%= elem.addedBy %></h4> 
+                        </div>              
+                    </div>
+                    <div class="column">
+                        <% if (elem.completed === false) {%>
+                            <a href="/watchlist/setCompleted/<%= elem._id%>/true" type="button" class="btn btn-outline-primary" >Finish</a>
+                        <% } else { %>
+                            <a href="/watchlist/setCompleted/<%= elem._id%>/false" type="button" class="btn btn-outline-primary" >Unfinish</a>
+                        <% } %>
+                        <a href="/watchlist/delete/<%= elem._id%>" type="button" class="btn btn-outline-primary float-end" onclick="return confirm('Are you sure you want to delete this item?')">Remove</a>
                     </div>
                 </div>
             <% } %>
