@@ -95,6 +95,7 @@ router.post('/signup',
           const user = new User(
             {username:username,
              passphrase:encrypted,
+             partnerCode: Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substring(0, 6).toUpperCase(),
             })
           
           await user.save()

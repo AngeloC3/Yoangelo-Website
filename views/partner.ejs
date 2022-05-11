@@ -1,0 +1,25 @@
+<div class="col-sm-5">
+    <h1>Your code is: <%= partnerCode %></h1>
+    <% if (partner == undefined) {%>
+        <h2><u>Add a partner!</u></h2>
+        <form class="form-control-lg" method="post" action="">
+            <div class="form-group">
+              <label for="friendName">Partner username</label>
+              <input type="text" class="form-control" id="friendName" name="friendName" placeholder="">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="friendCode">Partner code</label>
+                <input type="text" maxlength="6" class="form-control" id="friendCode" name="friendCode" placeholder=""></input>
+              </div>
+            <br>
+            <div class="d-flex justify-content-center" >
+                <input type="submit" >
+            </div>
+        </form>
+    <% } else { %>
+        <h2>Your partner is: <%= partner %></h2>
+        <a href="" type="button" class="btn btn-outline-primary" onclick="return confirm('Are you sure you want to remove partner?')">Remove Partner</a>
+    <% } %>
+</div>
+

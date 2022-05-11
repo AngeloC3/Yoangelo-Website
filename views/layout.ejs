@@ -33,13 +33,17 @@
               <a class="nav-link" href="/watchlist">Watch List</a>
             </li>
             
+            <li class="nav-item">
+              <a class="nav-link" href="/partner">Set Partner</a>
+            </li>
+
             <% if (!loggedIn) {%>
             <li class="nav-item">
               <a class="nav-link" href="/login">Login/Signup</a>
             </li>
             <% } else { %>
               <li class="nav-item">
-                <a class="nav-link" href="/logout">Logout <%= username %></a>
+                <a class="nav-link" href="/logout" onclick="return confirm('Are you sure you want to logout?')">Logout <%= username %></a>
               </li>
             <% } %>
       
