@@ -1,11 +1,19 @@
 const isLoggedIn = require('../exports/functions.js').isLoggedIn;
+const isUserSchemaDifferent = require('../exports/functions.js').isUserSchemaDifferent;
 const router = require('express').Router();
 const WatchListItem = require('../models/ToDoItem').watchListItem;
-
+const User = require('../models/User');
 
 router.get("/watchlist", isLoggedIn, async (req, res, next) => {
-    res.locals.watch_list =  await WatchListItem.find({})
-    console.log(req.session.user._id)
+    currUser = req.session.user
+    userCheck = await User.findById(currUser._id)
+    if (isUserSchemaDifferent(currUser, userCheck)){
+        req.session.user = userCheck
+        currUser = req.session.user
+    }
+    userId = currUser._id
+    partnerId = currUser.partnerId
+    res.locals.watch_list =  await WatchListItem.find({'userId': {$in: [userId, partnerId]} })
     res.render("watchlist");
   });
   
@@ -22,7 +30,7 @@ router.post("/watchlist/add", isLoggedIn, async (req, res, next) => {
       priority: prioritySelect,
       completed: false,
       createdAt: new Date(),
-      addedBy: req.session.user.username,
+      addedBy: req.session.username,
     })
     await item.save()
     res.redirect("/watchlist")

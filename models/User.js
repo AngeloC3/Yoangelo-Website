@@ -6,7 +6,7 @@ const ObjectId = Schema.Types.ObjectId;
 var userSchema = Schema( {
   username: String,
   passphrase: String,
-  partnerID: ObjectId,
+  partnerId: ObjectId,
   partnerCode: String, // NEEDS TO BE ADDED IN AUTH? same was ay passphrase?
 } );
 

@@ -21,7 +21,6 @@ const saltRounds = 10;
 const User = require('../models/User')
 
 
-
 // This is an example of middleware
 // where we look at a request and process it!
 router.use(function(req, res, next) {
@@ -95,6 +94,7 @@ router.post('/signup',
           const user = new User(
             {username:username,
              passphrase:encrypted,
+             partnerId: null,
              partnerCode: Math.random().toString(36).replace(/[^a-z0-9]+/g, '').substring(0, 6).toUpperCase(),
             })
           

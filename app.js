@@ -46,7 +46,7 @@ const app = express();
 
 var store = new MongoDBStore({
   uri: mongodb_URI,
-  collection: 'mySessions'
+  collection: 'sessions'
 });
 
 // Catch errors
@@ -54,24 +54,9 @@ store.on('error', function(error) {
   console.log(error);
 });
 
-app.use(require('express-session')({
-  secret: 'This is a secret',
-  cookie: {
-    maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
-  },
-  store: store,
-  // Boilerplate options, see:
-  // * https://www.npmjs.com/package/express-session#resave
-  // * https://www.npmjs.com/package/express-session#saveuninitialized
-  resave: true,
-  saveUninitialized: true
-}));
-
 // Here we specify that we will be using EJS as our view engine
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
-
-
 
 // this allows us to use page layout for the views 
 // so we don't have to repeat the headers and footers on every page ...
@@ -86,10 +71,17 @@ app.use(cookieParser());
 // Here we specify that static files will be in the public folder
 app.use(express.static(path.join(__dirname, "public")));
 
-// Here we enable session handling using cookies
+//Here we enable session handling using cookies
 app.use(
   session({
     secret: process.env.session_secret,
+    cookie: {
+      maxAge: 1000 * 60 * 60 * 24 * 7 // 1 week
+    },
+    store: store,
+    // Boilerplate options, see:
+    // * https://www.npmjs.com/package/express-session#resave
+    // * https://www.npmjs.com/package/express-session#saveuninitialized
     resave: false,
     saveUninitialized: false
   })
@@ -114,7 +106,7 @@ app.get("/", (req, res, next) => {
 });
 
 app.get("/testing", (req, res, next) => {
-  res.render("testing");
+  res.render("blank");
 });
 
 // here we catch 404 errors and forward to error handler
