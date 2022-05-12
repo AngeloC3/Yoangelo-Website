@@ -1,24 +1,28 @@
 const isLoggedIn = require('../exports/functions.js').isLoggedIn;
-const isUserSchemaDifferent = require('../exports/functions.js').isUserSchemaDifferent;
+const checkUserChange = require('../exports/functions.js').checkUserChange;
 const router = require('express').Router();
 const WatchListItem = require('../models/ToDoItem').watchListItem;
 const User = require('../models/User');
 
 router.get("/watchlist", isLoggedIn, async (req, res, next) => {
+    // check if change in user has been made by someone else
+    checkUserChange(req)
     currUser = req.session.user
-    userCheck = await User.findById(currUser._id)
-    if (isUserSchemaDifferent(currUser, userCheck)){
-        req.session.user = userCheck
-        currUser = req.session.user
-    }
+    // rest of method
     userId = currUser._id
     partnerId = currUser.partnerId
-    res.locals.watch_list =  await WatchListItem.find({'userId': {$in: [userId, partnerId]} })
-    res.render("watchlist");
+    res.locals.item_list =  await WatchListItem.find({'userId': {$in: [userId, partnerId]} })
+    res.locals.list_name = "watch list"
+    res.locals.addRoute = "/watchlist/add"
+    res.locals.setCompletedRoute = '/watchlist/setCompleted/REPLACE-ELEM/true'
+    res.locals.setUncompletedRoute = '/watchlist/setCompleted/REPLACE-ELEM/false'
+    res.locals.deleteRoute = '/watchlist/delete/REPLACE-ELEM'
+    res.render("toDo");
   });
   
 router.get("/watchlist/add", isLoggedIn, (req, res, next) => {
-    res.render("watchlistForm");
+    res.locals.formRoute = "/watchlist/add"
+    res.render("toDoForm");
   });
   
 router.post("/watchlist/add", isLoggedIn, async (req, res, next) => {

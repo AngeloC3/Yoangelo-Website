@@ -1,13 +1,13 @@
 
-<a href="/watchlist/add" type="button" class="btn btn-outline-primary">Add to watch list</a>
+<a href=<%= addRoute %> type="button" class="btn btn-outline-primary">Add to <%= list_name %></a>
 
 <div>
-    <% if (watch_list == "") {%>
-        <h1 >Empty watch list :(</h1>
+    <% if (item_list == "") {%>
+        <h1 >Empty <%= list_name %> :(</h1>
     <% } else { %>
         <div class="d-flex overflow-scroll flex-column">
-            <h1>Watch List</h1>
-            <% for (elem of watch_list){%>
+            <h1><%= capitalizeStringAsTitle(list_name) %></h1>
+            <% for (elem of item_list){%>
                 <div class="p-3 m-3 border border-primary bg-light">
                     <% if (elem.completed === false) {%>
                         <div>
@@ -24,14 +24,27 @@
                     </div>
                     <div class="column">
                         <% if (elem.completed === false) {%>
-                            <a href="/watchlist/setCompleted/<%= elem._id%>/true" type="button" class="btn btn-outline-primary" >Finish</a>
+                            <a href=<%= insertElem(setCompletedRoute, elem._id) %> type="button" class="btn btn-outline-primary" >Finish</a>
                         <% } else { %>
-                            <a href="/watchlist/setCompleted/<%= elem._id%>/false" type="button" class="btn btn-outline-primary" >Unfinish</a>
+                            <a href=<%= insertElem(setUncompletedRoute, elem._id) %> type="button" class="btn btn-outline-primary" >Unfinish</a>
                         <% } %>
-                        <a href="/watchlist/delete/<%= elem._id%>" type="button" class="btn btn-outline-primary float-end" onclick="return confirm('Are you sure you want to delete this item?')">Remove</a>
+                        <a href=<%= insertElem(deleteRoute, elem._id) %> type="button" class="btn btn-outline-primary float-end" onclick="return confirm('Are you sure you want to delete this item?')">Remove</a>
                     </div>
                 </div>
             <% } %>
         </div>
     <% } %>
 </div>
+
+<% function capitalizeStringAsTitle(string){
+    const arr = string.split(" ");
+    for (var i = 0; i < arr.length; i++) {
+      arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1);
+    }
+    const rString = arr.join(" ");
+    return rString
+  } %> 
+
+  <% function insertElem(string, elemId){
+    return string.replace('REPLACE-ELEM', elemId)
+  } %> 

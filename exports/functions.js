@@ -7,7 +7,11 @@ const isLoggedIn = (req,res,next) => {
   }
 
 function isUserSchemaDifferent(user, data){
-  c1 = user._id.equals(data._id)
+  try{
+    c1 = user._id.equals(data._id)
+  } catch {
+    c1 = user._id === data._id
+  }
   c2 = user.username === data.username
   try{
       c3 = user.partnerId.equals(data.partnerId)
@@ -19,4 +23,14 @@ function isUserSchemaDifferent(user, data){
   return !(c1 && c2 && c3 && c4)
 }
 
-module.exports = { isLoggedIn , isUserSchemaDifferent};
+const User = require('../models/User');
+
+async function checkUserChange(req){
+  currUser = req.session.user
+  userCheck = await User.findById(currUser._id)
+  if (isUserSchemaDifferent(currUser, userCheck)){
+    req.session.user = userCheck
+  }
+}
+
+module.exports = { isLoggedIn , isUserSchemaDifferent, checkUserChange};

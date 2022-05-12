@@ -97,6 +97,8 @@ app.use(require('./routes/auth'))
 // other uses
 app.use(require('./routes/watchlistRoutes'))
 app.use(require('./routes/partnerRoutes'))
+app.use(require('./routes/bucketlistRoutes'))
+app.use(require('./routes/countdownRoutes'))
 
 // ROUTES
 // and the all renders will be wrapped in the views/layouts.ejs code which provides
